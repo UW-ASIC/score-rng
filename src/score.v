@@ -19,48 +19,44 @@ module score (
   reg game_active = 1'b0;
 
   // determine if game_active
-  always @(posedge game_start or posedge game_over or negedge rst_n) begin
+  always @(posedge clk or negedge rst_n) begin
     if (!rst_n) begin
       game_active <= 1'b0;
+      score_int[0] <= 0;
+      score_int[1] <= 0;
+      score_int[2] <= 0;
+      score_int[3] <= 0;
     end else begin
       if (game_start)
         game_active <= 1'b1;
       else if (game_over)
         game_active <= 1'b0;
-    end
-  end
-
-  // at the posedge of the gametick, increment the score by 1.
-  always @(posedge game_tick or negedge rst_n) begin
-    if (!rst_n) begin
-      score_int[0] <= 0;
-      score_int[1] <= 0;
-      score_int[2] <= 0;
-      score_int[3] <= 0;
-    end else if (game_active) begin
-      if (score_int[0] == 9) begin
-        if (score_int[1] == 9) begin
-          if (score_int[2] == 9) begin
-            if (score_int[3] == 9) begin
-              // Reset the game if the score gets to 9999
-              score_int[0] <= 0;
-              score_int[1] <= 0;
-              score_int[2] <= 0;
-              score_int[3] <= 0;
+      
+      if (game_active) begin
+        if (score_int[0] == 9) begin
+          if (score_int[1] == 9) begin
+            if (score_int[2] == 9) begin
+              if (score_int[3] == 9) begin
+                // Reset the game if the score gets to 9999
+                score_int[0] <= 0;
+                score_int[1] <= 0;
+                score_int[2] <= 0;
+                score_int[3] <= 0;
+              end else begin
+                score_int[3] = score_int[3] + 1;
+              end
             end else begin
-              score_int[3] = score_int[3] + 1;
+              score_int[2] = score_int[2] + 1;
             end
           end else begin
-            score_int[2] = score_int[2] + 1;
+            score_int[1] = score_int[1] + 1;
           end
         end else begin
-          score_int[1] = score_int[1] + 1;
+          score_int[0] = score_int[0] + 1;
         end
-      end else begin
-        score_int[0] = score_int[0] + 1;
       end
+      
     end
-  
   end
 
 // List all unused inputs to prevent warnings
