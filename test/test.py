@@ -5,6 +5,18 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
+# ui_in mapping:
+# ui_in[0] = game_start
+# ui_in[1] = game_over
+# ui_in [2] = game_tick
+
+# uo_out mapping:
+# TEMPORARY: uo_out[7] = game_active register
+# uo_out[6:4] = bottom 3 bits (total 4 bits) of the thousands place decimal number
+# uo_out[3:0] = 4 bits of the hundreds place decimal number
+# uio_out[7:4] = 4 bits of the tens place decimal number
+# uio_out[3:0] = 4 bits of the ones place decimal number
+
 
 @cocotb.test()
 async def test_project(dut):
