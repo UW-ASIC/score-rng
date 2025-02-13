@@ -49,7 +49,7 @@ async def test_project(dut):
     score_high = dut.uo_out.value
     score_low = dut.uio_out.value
     score = (int(score_high) << 8) | int(score_low)
-    dut._log.info(f"Score after 60 ticks: {score}")
+    dut._log.info(f"Score after 60 ticks: {score} - bottom: {score_low} - top: {score_high}")
 
     # End game with longer pulse
     dut._log.info("Ending game")
