@@ -31,7 +31,7 @@ module tt_um_dino_score (
   );
 
   // Assign top 8 bits to uo_out and bottom 8 bits to uio_out
-    assign uo_out  = (debug & 0x00) << 8 & score_out[14:8]; // Top 8 bits
+    assign uo_out  = {debug, score_out[14:8]}; // Top 8 bits
   assign uio_out = score_out[7:0];  // Bottom 8 bits
 
   // Set uio_oe to output mode for all 8 bits
