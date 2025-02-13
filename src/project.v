@@ -14,7 +14,6 @@ module tt_um_dino_score (
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
     input  wire       rst_n,     // reset_n - low to reset
-    output wire       debug
 );
 
   // All output pins must be assigned. If not used, assign to 0.
@@ -31,7 +30,7 @@ module tt_um_dino_score (
   );
 
   // Assign top 8 bits to uo_out and bottom 8 bits to uio_out
-  assign uo_out  = score_out[15:8]; // Top 8 bits
+assign uo_out  = debug << 8 & score_out[14:8]; // Top 8 bits
   assign uio_out = score_out[7:0];  // Bottom 8 bits
 
   // Set uio_oe to output mode for all 8 bits
