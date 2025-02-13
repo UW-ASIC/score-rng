@@ -38,17 +38,18 @@ async def test_project(dut):
     dut.ui_in.value = 0  # Remove pulse
     await ClockCycles(dut.clk, 2)
 # Generate game ticks to increment score
-    for _ in range(10):  # Simulate 10 game ticks
+    for _ in range(60):  # Simulate 60 game ticks
         dut.ui_in.value = 0b00000100  # game_tick pulse
         await ClockCycles(dut.clk, 1)
         dut.ui_in.value = 0
         await ClockCycles(dut.clk, 2)
 
-    # Capture score after 10 ticks
+    # Capture score after 60 ticks
     score_high = dut.uo_out.value
     score_low = dut.uio_out.value
     score = (int(score_high) << 8) | int(score_low)
-    dut._log.info(f"Score after 10 ticks: {score}")
+    dut._log.info(f"Score after 60 ticks: {score}")
+    assert 58 < score and score < 62
 
     # End game
     dut._log.info("Ending game")
