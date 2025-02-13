@@ -43,7 +43,7 @@ async def test_project(dut):
         dut.ui_in.value = 0b00000100  # game_tick pulse
         await ClockCycles(dut.clk, 5)  # Longer pulse
         dut.ui_in.value = 0
-        dut._log.info(f"game_active: {dut.debug.value}")
+        dut._log.info(f"game_active: {dut.uo_out.value & 0x80}")
         await ClockCycles(dut.clk, 16662)  # Wait for next 60Hz tick
 
     # Capture score after 60 ticks
