@@ -60,7 +60,7 @@ module score (
   end
 
 // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+  wire _unused = &{clk, rst_n};
   
   assign score = {score_int[3], score_int[2], score_int[1], score_int[0]};
 
