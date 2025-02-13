@@ -31,32 +31,34 @@ async def test_project(dut):
     assert dut.uo_out.value == 0, "uo_out should be 0 after reset"
     assert dut.uio_out.value == 0, "uio_out should be 0 after reset"
 
-     # Start game
+    # Start game with longer pulse
     dut._log.info("Starting game")
     dut.ui_in.value = 0b00000001  # game_start pulse
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 5)
     dut.ui_in.value = 0  # Remove pulse
-    await ClockCycles(dut.clk, 2)
-# Generate game ticks to increment score
-    for _ in range(60):  # Simulate 60 game ticks
+    await ClockCycles(dut.clk, 10)
+
+    # Generate 60 game ticks (1 every 16667 clock cycles to match 60Hz)
+    for i in range(60):
         dut.ui_in.value = 0b00000100  # game_tick pulse
-        await ClockCycles(dut.clk, 1)
+        await ClockCycles(dut.clk, 5)  # Longer pulse
         dut.ui_in.value = 0
-        await ClockCycles(dut.clk, 2)
+        await ClockCycles(dut.clk, 16662)  # Wait for next 60Hz tick
 
     # Capture score after 60 ticks
     score_high = dut.uo_out.value
     score_low = dut.uio_out.value
     score = (int(score_high) << 8) | int(score_low)
     dut._log.info(f"Score after 60 ticks: {score}")
-    assert 58 < score and score < 62
 
-    # End game
+    # End game with longer pulse
     dut._log.info("Ending game")
     dut.ui_in.value = 0b00000010  # game_over pulse
-    await ClockCycles(dut.clk, 1)
+    await ClockCycles(dut.clk, 5)
     dut.ui_in.value = 0  # Remove pulse
-    await ClockCycles(dut.clk, 2)
+    await ClockCycles(dut.clk, 10)
+
+    assert 58 < score and score < 62
 
     # Check final score (should remain unchanged after game_over)
     final_score_high = dut.uo_out.value
