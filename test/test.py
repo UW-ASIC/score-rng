@@ -67,7 +67,7 @@ async def test_project(dut):
         # Check final score (should remain unchanged after game_over)
         final_score_high = dut.uo_out.value
         final_score_low = dut.uio_out.value
-        final_score = (int(final_score_high) << 8) | int(final_score_low)
+        final_score = int(final_score_high & 0x70) * 1000 + int(final_score_high & 0xF) * 100 + int(final_score_low & 0xF0) * 10 + int(final_score_low & 0xF)
         
         assert final_score == score, "Score should not change after game over"
         dut._log.info(f"Final score after game over: {final_score}")
