@@ -22,19 +22,47 @@ async def test_project(dut):
     dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
+    await ClockCycles(dut.clk, 10)
+    dut.rst_n.value = 0
 
-    dut._log.info("Test project behavior")
+    dut._log.info("test score module")
+    
+    # Check initial output state
+    assert dut.uo_out.value == 0, "uo_out should be 0 after reset"
+    assert dut.uio_out.value == 0, "uio_out should be 0 after reset"
 
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
-
-    # Wait for one clock cycle to see the output values
+     # Start game
+    dut._log.info("Starting game")
+    dut.ui_in.value = 0b00000001  # game_start pulse
     await ClockCycles(dut.clk, 1)
+    dut.ui_in.value = 0  # Remove pulse
+    await ClockCycles(dut.clk, 2)
+# Generate game ticks to increment score
+    for _ in range(10):  # Simulate 10 game ticks
+        dut.ui_in.value = 0b00000100  # game_tick pulse
+        await ClockCycles(dut.clk, 1)
+        dut.ui_in.value = 0
+        await ClockCycles(dut.clk, 2)
 
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    # Capture score after 10 ticks
+    score_high = dut.uo_out.value
+    score_low = dut.uio_out.value
+    score = (int(score_high) << 8) | int(score_low)
+    dut._log.info(f"Score after 10 ticks: {score}")
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    # End game
+    dut._log.info("Ending game")
+    dut.ui_in.value = 0b00000010  # game_over pulse
+    await ClockCycles(dut.clk, 1)
+    dut.ui_in.value = 0  # Remove pulse
+    await ClockCycles(dut.clk, 2)
+
+    # Check final score (should remain unchanged after game_over)
+    final_score_high = dut.uo_out.value
+    final_score_low = dut.uio_out.value
+    final_score = (int(final_score_high) << 8) | int(final_score_low)
+    
+    assert final_score == score, "Score should not change after game over"
+    dut._log.info(f"Final score after game over: {final_score}")
+
+    dut._log.info("Test completed successfully!")
