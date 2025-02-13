@@ -5,7 +5,7 @@
 
 `default_nettype none
 
-module score (
+module ScoreModule (
     input  wire              game_start,     // pulse for starting the counter
     input  wire              game_over,      // pulse for ending the counter
     input  wire              game_tick,      // 60 Hz. end of frame pulse
