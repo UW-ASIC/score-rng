@@ -13,7 +13,8 @@ module tt_um_dino_score (
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // always 1 when the design is powered, so you can ignore it
     input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
+    input  wire       rst_n,     // reset_n - low to reset
+    output wire       debug
 );
 
   // All output pins must be assigned. If not used, assign to 0.
@@ -25,7 +26,8 @@ module tt_um_dino_score (
     .game_tick(ui_in[2]),      // 60 Hz. end of frame pulse
     .clk(clk),            // clock
     .rst_n(rst_n),          // reset_n - low to reset
-    .score(score_out)
+    .score(score_out),
+      .debug_temp(debug)
   );
 
   // Assign top 8 bits to uo_out and bottom 8 bits to uio_out
