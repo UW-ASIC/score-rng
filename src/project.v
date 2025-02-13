@@ -38,6 +38,6 @@ assign uo_out  = debug << 8 & score_out[14:8]; // Top 8 bits
   assign uio_oe = 8'b11111111; // Enable output mode for all uio_out pins
 
   // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0, uio_in, ui_in[7:3]};
+    wire _unused = &{ena, clk, rst_n, 1'b0, uio_in, ui_in[7:3], score_out[15]};
 
 endmodule
