@@ -33,14 +33,14 @@ async def test_project(dut):
     # Start game with longer pulse
     dut._log.info("Starting game")
     dut.ui_in.value = 0b00000001  # game_start pulse
-    await ClockCycles(dut.clk, 5)
+    await ClockCycles(dut.clk, 1)
     dut.ui_in.value = 0  # Remove pulse
-    await ClockCycles(dut.clk, 5)
+    await ClockCycles(dut.clk, 1)
 
     # Generate 60 game ticks (1 every 16667 clock cycles to match 60Hz)
     for i in range(60):
         dut.ui_in.value = 0b00000100  # game_tick pulse
-        await ClockCycles(dut.clk, 5)  # Longer pulse
+        await ClockCycles(dut.clk, 1)  # Longer pulse
         dut.ui_in.value = 0
         dut._log.info(f"game_active: {bool(dut.uo_out.value & 0x80)}")
         await ClockCycles(dut.clk, 16662)  # Wait for next 60Hz tick
@@ -54,9 +54,11 @@ async def test_project(dut):
     # End game with longer pulse
     dut._log.info("Ending game")
     dut.ui_in.value = 0b00000010  # game_over pulse
-    await ClockCycles(dut.clk, 5)
+    await ClockCycles(dut.clk, 1)
     dut.ui_in.value = 0  # Remove pulse
     await ClockCycles(dut.clk, 10)
+
+    dut._log.info(f"game_active: {bool(dut.uo_out.value & 0x80)}")
 
     assert 58 < score and score < 62
 
