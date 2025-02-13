@@ -18,6 +18,7 @@ module tt_um_dino_score (
 
   // All output pins must be assigned. If not used, assign to 0.
     wire [15:0] score_out;
+    wire debug;
 
   ScoreModule score_mod (
     .game_start(ui_in[0]),     // pulse for starting the counter
