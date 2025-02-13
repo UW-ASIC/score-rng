@@ -50,7 +50,7 @@ async def test_project(dut):
         # Capture score after 60 ticks
         score_high = dut.uo_out.value
         score_low = dut.uio_out.value
-        score = int(score_high & 0x70) * 1000 + int(score_high & 0xF) * 100 + int(score_low & 0xF0) * 10 + int(score_low & 0xF)
+        score = int(score_high & 0x70 >> 4) * 1000 + int(score_high & 0xF) * 100 + int(score_low & 0xF0 >> 4) * 10 + int(score_low & 0xF)
         dut._log.info(f"Score after 60 ticks: {score} - bottom: {score_low} - top: {score_high}")
     
         # End game with longer pulse
@@ -67,7 +67,7 @@ async def test_project(dut):
         # Check final score (should remain unchanged after game_over)
         final_score_high = dut.uo_out.value
         final_score_low = dut.uio_out.value
-        final_score = int(final_score_high & 0x70) * 1000 + int(final_score_high & 0xF) * 100 + int(final_score_low & 0xF0) * 10 + int(final_score_low & 0xF)
+        final_score = int(final_score_high & 0x70 >> 4) * 1000 + int(final_score_high & 0xF) * 100 + int(final_score_low & 0xF0 >> 4) * 10 + int(final_score_low & 0xF)
         
         assert final_score == score, "Score should not change after game over"
         dut._log.info(f"Final score after game over: {final_score}")
