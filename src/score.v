@@ -33,7 +33,7 @@ module ScoreModule (
       else if (game_over)
         game_active <= 1'b0;
       
-      if (game_active) begin
+        if (game_active && game_tick) begin
         if (score_int[0] == 9) begin
           if (score_int[1] == 9) begin
             if (score_int[2] == 9) begin
